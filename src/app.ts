@@ -1,1 +1,1 @@
-console.log(`env.MESSAGE: ${process.env.MESSAGE}`);
+console.log(`env.MESSAGE: ${process.env.MESSAGE}...`);
