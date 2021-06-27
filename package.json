@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc && node dist/app.js",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "dev": "env-cmd -e development ts-node-dev --respawn -- src/app.ts",
     "debug": "ts-node-dev --respawn --debug --inspect=9226 -- src/app.ts",
     "kill-port": "fuser -k 9226/tcp"
@@ -18,6 +19,8 @@
     "husky": "^6.0.0",
     "trim-newlines": "^4.0.2",
     "ts-node-dev": "^1.1.6",
+    "tslint": "^6.1.3",
     "typescript": "^4.3.4"
-  }
+  },
+  "dependencies": {}
 }
