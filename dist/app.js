@@ -6,6 +6,5 @@ const result = dotenv_1.config();
 if (result.error) {
     throw result.error;
 }
-debugger;
 console.log(`environment variable MESSAGE: ${process.env.MESSAGE}...`);
 //# sourceMappingURL=app.js.map
