@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node dist/app.js",
+    "start": "tsc && node dist/main.js",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "dev": "env-cmd -e development ts-node-dev --respawn -- src/app.ts",
-    "debug": "ts-node-dev --respawn --debug --inspect=9226 -- src/app.ts",
+    "dev": "ts-node-dev --respawn -- src/main.ts",
+    "debug": "ts-node-dev --respawn --debug --inspect=9226 -- src/main.ts",
     "kill-port": "fuser -k 9226/tcp",
     "prepare": "husky install"
   },
@@ -23,5 +23,10 @@
     "tslint": "^6.1.3",
     "typescript": "^4.3.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@neo4j/graphql": "^1.0.3",
+    "apollo-server": "^2.25.2",
+    "graphql": "^15.5.1",
+    "neo4j-driver": "^4.3.1"
+  }
 }
