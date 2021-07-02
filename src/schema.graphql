@@ -1,0 +1,41 @@
+# The @relationship directive is used to define relationships.
+# DateTime and Point scalar types are available and map to the equivalent native Neo4j database types.
+# The @timestamp directive is used to indicate the property will be automatically updated when the node is created and updated.
+# The @id directive marks a field as a unique identifier and enables auto-generation when the node is created.
+
+type Order {
+  orderID: ID! @id
+  placedAt: DateTime @timestamp
+  shippingCost: Float
+  shipTo: Address @relationship(type: "SHIPS_TO", direction: OUT)
+  customer: Customer @relationship(type: "PLACED", direction: IN)
+  books: [Book] @relationship(type: "CONTAINS", direction: OUT)
+}
+
+type Customer {
+  username: String
+  orders: [Order] @relationship(type: "PLACED", direction: OUT)
+  reviews: [Review] @relationship(type: "WROTE", direction: OUT)
+}
+
+type Address {
+  address: String
+  location: Point
+  order: Order @relationship(type: "SHIPS_TO", direction: IN)
+}
+
+type Book {
+  isbn: ID!
+  title: String
+  price: Float
+  description: String
+  reviews: [Review] @relationship(type: "REVIEWS", direction: IN)
+}
+
+type Review {
+  rating: Int
+  text: String
+  createdAt: DateTime @timestamp
+  book: Book @relationship(type: "REVIEWS", direction: OUT)
+  author: Customer @relationship(type: "WROTE", direction: IN)
+}

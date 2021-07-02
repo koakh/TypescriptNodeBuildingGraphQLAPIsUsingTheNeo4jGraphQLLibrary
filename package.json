@@ -8,8 +8,7 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "dev": "ts-node-dev --respawn -- src/main.ts",
     "debug": "ts-node-dev --respawn --debug --inspect=9226 -- src/main.ts",
-    "kill-port": "fuser -k 9226/tcp",
-    "prepare": "husky install"
+    "kill-port": "fuser -k 9226/tcp"
   },
   "keywords": [],
   "author": "",
