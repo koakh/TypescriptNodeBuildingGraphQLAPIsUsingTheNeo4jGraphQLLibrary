@@ -1,0 +1,118 @@
+@protocol = http
+@hostname = localhost
+@port = 4000
+@host = {{protocol}}://{{hostname}}:{{port}}/graphql
+@contentType = application/json
+// @createdAt = {{$datetime iso8601}}
+// @modifiedBy = {{$processEnv USERNAME}}
+// @Authorization = Bearer xxx
+
+### booksWherePriceLess
+// @name booksWherePriceLess
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+query ($price: Float!) {
+  books(where: { price_LT: $price }) {
+    title
+    price
+  }
+}
+
+{
+  "price": 20.00
+}
+
+### createAuthors
+// @name createAuthors
+
+mutation {
+  createAuthors(
+    input: [
+      {
+        name: "Marty Cagan"
+        books: { connect: { where: { title: "Inspired" } } }
+      }
+      {
+        name: "Winston Graham"
+        books: { connect: { where: { title: "Ross Poldark" } } }
+      }
+      {
+        name: "Mark Needham"
+        books: { connect: { where: { title: "Graph Algorithms" } } }
+      }
+      {
+        name: "Amy E. Hodler"
+        books: { connect: { where: { title: "Graph Algorithms" } } }
+      }
+    ]
+  ) {
+    authors {
+      name
+      books {
+        title
+      }
+    }
+  }
+}
+
+### updateBooksWithCreateSubjects
+// @name updateBooksWithCreateSubjects
+// There are a few different ways to approach this one, let's see how we can accomplish this using the `updateBooks` mutation:
+
+mutation {
+  # inspired
+  inspired: updateBooks(
+    where:{title:"Inspired"},
+    create: {
+      subjects: [
+        {name:"Product management"},
+        {name:"Design"},
+      ]
+    }
+  ) {
+    books{
+      title
+      subjects{
+        name
+      }
+    }
+  }
+  # poldark
+  poldark: updateBooks(
+    where:{title:"Ross Poldark"},
+    create: {
+      subjects: [
+        {name:"Historical fiction"},
+        {name:"Cornwall"},
+      ]
+    }
+  ) {
+    books{
+      title
+      subjects{
+        name
+      }
+    }
+  }
+  # algorithms
+  algorithms: updateBooks(
+    where:{title:"Graph Algorithms"},
+    create: {
+      subjects: [
+        {name:"Graph theory"},
+        {name:"Neo4j"},
+      ]
+    }
+  ) {
+    books{
+      title
+      subjects{
+        name
+      }
+    }
+  } 
+}

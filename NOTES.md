@@ -27,4 +27,8 @@ simple server, but a non boilerplate awesome graphql server
 }
 ```
 
-## 
+## Cypher
+
+```cypher
+$ MATCH (a) DETACH DELETE a;
+```

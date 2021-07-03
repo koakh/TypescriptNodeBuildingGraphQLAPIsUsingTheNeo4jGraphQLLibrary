@@ -4,5 +4,4 @@ export const envVariables = {
   neo4JUser: process.env.NEO4J_USER || 'neo4j',
   neo4JPassword: process.env.NEO4J_PASSWORD || 'letmein',
 };
-
-console.log(`envVariables: [${JSON.stringify(envVariables, undefined, 2)}]`);
+// console.log(`envVariables: [${JSON.stringify(envVariables, undefined, 2)}]`);
