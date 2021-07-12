@@ -5,7 +5,22 @@
 @contentType = application/json
 // @createdAt = {{$datetime iso8601}}
 // @modifiedBy = {{$processEnv USERNAME}}
-// @Authorization = Bearer xxx
+// Token For Customer EmilEifrem7474
+// @Authorization = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJFbWlsRWlmcmVtNzQ3NCIsInJvbGVzIjpbImN1c3RvbWVyIl0sImlhdCI6MTUxNjIzOTAyMn0.YwftAMDTw6GqmYOFLGHC_f6UiUhfrJAGkZGfrGmiQ2U
+# {
+#   "sub": "EmilEifrem7474",
+#   "roles": ["customer"],
+#   "iat": 1516239022
+# }
+// This token is used to make authenticated requests to the GraphQL API as an "admin" user:
+@Authorization = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJCb2JMb2JsYXc3Njg3Iiwicm9sZXMiOlsiYWRtaW4iXSwiaWF0IjoxNTE2MjM5MDIyfQ.f2GKIu31gz39fMJwj5_byFCMDPDy3ncdWOIhhqcwBxk
+# {
+#   "sub": "BobLoblaw7687",
+#   "roles": [
+#     "admin"
+#   ],
+#   "iat": 1516239022
+# }
 
 ### booksWherePriceLess
 // @name booksWherePriceLess
@@ -28,6 +43,11 @@ query ($price: Float!) {
 
 ### createAuthors
 // @name createAuthors
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
 
 mutation {
   createAuthors(
@@ -62,6 +82,11 @@ mutation {
 ### updateBooksWithCreateSubjects
 // @name updateBooksWithCreateSubjects
 // There are a few different ways to approach this one, let's see how we can accomplish this using the `updateBooks` mutation:
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
 
 mutation {
   # inspired
@@ -115,4 +140,656 @@ mutation {
       }
     }
   } 
+}
+
+### part 2 : The Neo4j GraphQL Library
+
+### booksCreateBooks
+// @name booksCreateBooks
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+mutation {
+  createBooks(
+    input: {
+      isbn: "1492047686"
+      title: "Graph Algorithms"
+      price: 37.48
+      description: "Practical Examples in Apache Spark and Neo4j"
+    }
+  ) {
+    books {
+      isbn
+      title
+      price
+      description
+    }
+  }
+}
+
+### booksCreateReviews
+// @name booksCreateReviews
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+mutation {
+  createReviews(
+    input: {
+      rating: 5
+      text: "Best overview of graph data science!"
+      book: { connect: { where: { title: "Graph Algorithms" } } }
+    }
+  ) {
+    reviews {
+      rating
+      text
+      createdAt
+      book {
+        title
+      }
+    }
+  }
+}
+
+### customerCreateCustomers
+// @name customerCreateCustomers
+// We can even create more complex nested structures using this nested mutation feature of the Neo4j GraphQL Library. Here we’ll create a Customer, Order, and Address nodes and their associated relationships in this single mutation.
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+mutation {
+  createCustomers(
+    input: {
+      username: "EmilEifrem7474"
+      reviews: {
+        connect: { where: { text: "Best overview of graph data science!" } }
+      }
+      orders: {
+        create: {
+          books: { connect: { where: { title: "Graph Algorithms" } } }
+          shipTo: {
+            create: {
+              address: "111 E 5th Ave, San Mateo, CA 94401"
+              location: {
+                latitude: 37.5635980790
+                longitude: -122.322243272725
+              }
+            }
+          }
+        }
+      }
+    }
+  ) {
+    customers {
+      username
+      orders {
+        placedAt
+        books {
+          title
+        }
+        shipTo {
+          address
+        }
+      }
+      reviews {
+        text
+        rating
+        book {
+          title
+        }
+      }
+    }
+  }
+}
+
+### MATCH (a) DETACH DELETE a
+
+### seedPart21
+// @name seedPart21
+// We can even create more complex nested structures using this nested mutation feature of the Neo4j GraphQL Library. Here we’ll create a Customer, Order, and Address nodes and their associated relationships in this single mutation.
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+mutation {
+  createBooks(
+    input: [
+      {
+        isbn: "1492047686"
+        title: "Graph Algorithms"
+        price: 37.48
+        description: "Practical Examples in Apache Spark and Neo4j"
+      }
+      {
+        isbn: "1119387507"
+        title: "Inspired"
+        price: 21.38
+        description: "How to Create Tech Products Customers Love"
+      }
+      {
+        isbn: "190962151X"
+        title: "Ross Poldark"
+        price: 15.52
+        description: "Ross Poldark is the first novel in Winston Graham's sweeping saga of Cornish life in the eighteenth century."
+      }
+    ]
+  ) {
+    books {
+      title
+    }
+  }
+}
+
+### seedPart22
+
+// @name seedPart22
+// We can even create more complex nested structures using this nested mutation feature of the Neo4j GraphQL Library. Here we’ll create a Customer, Order, and Address nodes and their associated relationships in this single mutation.
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+mutation {
+  createCustomers(
+    input: [
+      {
+        username: "EmilEifrem7474"
+        reviews: {
+          create: {
+            rating: 5
+            text: "Best overview of graph data science!"
+            book: { connect: { where: { isbn: "1492047686" } } }
+          }
+        }
+        orders: {
+          create: {
+            books: { connect: { where: { title: "Graph Algorithms" } } }
+            shipTo: {
+              create: {
+                address: "111 E 5th Ave, San Mateo, CA 94401"
+                location: {
+                  latitude: 37.5635980790
+                  longitude: -122.322243272725
+                }
+              }
+            }
+          }
+        }
+      }
+      {
+        username: "BookLover123"
+        reviews: {
+          create: [
+            {
+              rating: 4
+              text: "Beautiful depiction of Cornwall."
+              book: { connect: { where: { isbn: "190962151X" } } }
+            }
+          ]
+        }
+        orders: {
+          create: {
+            books: {
+              connect: [
+                { where: { title: "Ross Poldark" } }
+                { where: { isbn: "1119387507" } }
+                { where: { isbn: "1492047686" } }
+              ]
+            }
+            shipTo: {
+              create: {
+                address: "Nordenskiöldsgatan 24, 211 19 Malmö, Sweden"
+                location: { latitude: 55.6122270502, longitude: 12.99481772774 }
+              }
+            }
+          }
+        }
+      }
+    ]
+  ) {
+    customers {
+      username
+    }
+  }
+}
+
+### Querying Data With GraphQL
+
+### sortingAndPagination
+// @name sortingAndPagination
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+query {
+  books(options: { sort: { price: DESC }, limit: 1, skip: 0 }) {
+    title
+    price
+  }
+}
+
+### filtering
+// @name filtering
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+query {
+  books(where: { price_LT: 20.00 }) {
+    title
+    price
+  }
+}
+
+### filteringDistanceToPoint
+// @name filteringDistanceToPoint
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+query {
+  addresses(
+    where: {
+      location_LT: {
+        distance: 1000
+        point: { latitude: 37.56169133066, longitude: -122.3232480481 }
+      }
+    }
+  ) {
+    address
+  }
+}
+
+### filteringWithNestedSelection
+// @name filteringWithNestedSelection
+// where argument in nested selections to filter relationships.
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+query {
+  books(where: { price_LT: 20.00 }) {
+    title
+    price
+    reviews(where: { createdAt_GT: "2021-01-01" }) {
+      text
+      rating
+    }
+  }
+}
+
+### filteringAtRootLevel
+// @name filteringAtRootLevel
+// filtering at the root of our query, but using a relationship
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+query {
+  orders(
+    where: {
+      shipTo: {
+        location_LT: {
+          distance: 1000
+          point: { latitude: 37.56169133066, longitude: -122.3232480481 }
+        }
+      }
+    }
+  ) {
+    orderID
+    customer {
+      username
+    }
+    books {
+      title
+    }
+  }
+}
+
+### part 3 : Adding Custom Logic
+
+### MATCH (a) DETACH DELETE a
+
+### seedPart31
+// @name seedPart31
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+Authorization: {{Authorization}}
+
+mutation {
+  createBooks(
+    input: [
+      {
+        isbn: "1492047686"
+        title: "Graph Algorithms"
+        price: 37.48
+        description: "Practical Examples in Apache Spark and Neo4j"
+        subjects: { create: [{ name: "Graph theory" }, { name: "Neo4j" }] }
+        authors: {
+          create: [{ name: "Mark Needham" }, { name: "Amy E. Hodler" }]
+        }
+      }
+      {
+        isbn: "1119387507"
+        title: "Inspired"
+        price: 21.38
+        description: "How to Create Tech Products Customers Love"
+        subjects: {
+          create: [{ name: "Product management" }, { name: "Design" }]
+        }
+        authors: { create: { name: "Marty Cagan" } }
+      }
+      {
+        isbn: "190962151X"
+        title: "Ross Poldark"
+        price: 15.52
+        description: "Ross Poldark is the first novel in Winston Graham's sweeping saga of Cornish life in the eighteenth century."
+        subjects: {
+          create: [{ name: "Historical fiction" }, { name: "Cornwall" }]
+        }
+        authors: { create: { name: "Winston Graham" } }
+      }
+    ]
+  ) {
+    books {
+      title
+    }
+  }
+}
+
+### seedPart32
+// @name seedPart32
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+Authorization: {{Authorization}}
+
+mutation {
+  createCustomers(
+    input: [
+      {
+        username: "EmilEifrem7474"
+        reviews: {
+          create: {
+            rating: 5
+            text: "Best overview of graph data science!"
+            book: { connect: { where: { isbn: "1492047686" } } }
+          }
+        }
+        orders: {
+          create: {
+            books: { connect: { where: { title: "Graph Algorithms" } } }
+            shipTo: {
+              create: {
+                address: "111 E 5th Ave, San Mateo, CA 94401"
+                location: {
+                  latitude: 37.5635980790
+                  longitude: -122.322243272725
+                }
+              }
+            }
+          }
+        }
+      }
+      {
+        username: "BookLover123"
+        reviews: {
+          create: [
+            {
+              rating: 4
+              text: "Beautiful depiction of Cornwall."
+              book: { connect: { where: { isbn: "190962151X" } } }
+            }
+          ]
+        }
+        orders: {
+          create: {
+            books: {
+              connect: [
+                { where: { title: "Ross Poldark" } }
+                { where: { isbn: "1119387507" } }
+                { where: { isbn: "1492047686" } }
+              ]
+            }
+            shipTo: {
+              create: {
+                address: "Nordenskiöldsgatan 24, 211 19 Malmö, Sweden"
+                location: { latitude: 55.6122270502, longitude: 12.99481772774 }
+              }
+            }
+          }
+        }
+      }
+    ]
+  ) {
+    customers {
+      username
+    }
+  }
+}
+
+### orderSubTotal
+// @name orderSubTotal
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+query {
+  orders {
+    books {
+      title
+      price
+    }
+    subTotal
+  }
+}
+
+### booksRecommendedBooks
+// @name booksRecommendedBooks
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+query {
+  customers {
+    username
+    # use defaults
+    # recommended {
+    recommended(limit:1) {
+      title
+    }
+  }
+}
+
+### ordersCurrentWeather
+// @name ordersCurrentWeather
+// query an external API to fetch this data using the apoc.load.json
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+query {
+  orders {
+    shipTo {
+      address
+      currentWeather {
+        temperature
+        precipitation
+        windSpeed
+        windDirection
+        summary
+      }
+    }
+  }
+}
+
+### booksBookSearch
+// @name booksBookSearch
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+query {
+  bookSearch(searchString: "garph") {
+    title
+    description
+  }
+}
+
+### booksMergeBookSubjects
+// @name booksMergeBookSubjects
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+mutation {
+  mergeBookSubjects(
+    subject: "Non-fiction"
+    bookTitles: ["Graph Algorithms", "Inspired"]
+  ) {
+    name
+  }
+}
+
+### ordersEstimatedDeliveryCustomResolver
+// @name ordersEstimatedDeliveryCustomResolver
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+query {
+  orders {
+    shipTo {
+      address
+    }
+    # custom resolver (random date)
+    estimatedDelivery
+  }
+}
+
+### booksSimilarBooks
+// @name booksSimilarBooks
+// use the Jaccard Similarity function to find similar books using book subjects:
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+query {
+  books(where: { title: "Graph Algorithms" }) {
+    title
+    similar {
+      title
+    }
+  }
+}
+
+### template
+// @name template
+
+POST {{host}}
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: GraphQL
+// Authorization: {{Authorization}}
+
+query ($price: Float!) {
+  books(where: { price_LT: $price }) {
+    title
+  }
+}
+
+{
+  "price": 20.00
+}
+
+
+
+
+
+// TODO
+auth test allow customer owner
+query {
+  orders(where: {customer:{username: "EmilEifrem7474"}}){
+    orderID
+    customer{
+      username
+    }
+  }
+
+bind If a customer tries to create a review and connect it to a customer other than themselves the mutation will return an error. Try running this mutation using our example JWT. Does it work? Can you tell why?
+mutation {
+  createReviews(
+    input: {
+      rating: 1
+      text: "Borrring"
+      book: { connect: { where: { title: "Ross Poldark" } } }
+      author: { connect: { where: { username: "BookLover123" } } }
+    }
+  ) {
+    reviews {
+      text
+      rating
+      book {
+        title
+      }
+    }
+  }
+}
+
+bind now with owner
+mutation {
+  createReviews(
+    input: {
+      rating: 1
+      text: "Borrring"
+      book: { connect: { where: { title: "Ross Poldark" } } }
+      author: { connect: { where: { username: "EmilEifrem7474" } } }
+    }
+  ) {
+    reviews {
+      text
+      rating
+      book {
+        title
+      }
+    }
+  }
 }

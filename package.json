@@ -7,7 +7,7 @@
     "start": "tsc && node dist/main.js",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "dev": "ts-node-dev --respawn -- src/main.ts",
-    "debug": "ts-node-dev --watch=src/schema.graphql --respawn --debug --inspect=9226 -- src/main.ts",
+    "debug": "DEBUG=@neo4j/graphql:* ts-node-dev --watch=src/schema.graphql --respawn --debug --inspect=9226 -- src/main.ts",
     "kill-port": "fuser -k 9226/tcp"
   },
   "keywords": [],

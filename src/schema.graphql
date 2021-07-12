@@ -97,8 +97,8 @@ extend type Address {
   """)
 }
 
-# Custom Query Field
-# We can use the @cypher directive on Query fields to compliment the auto-generated Query fields provided by the Neo4j GraphQL Library. Perhaps we want to leverage a full-text index for fuzzy matching for book searches?
+# custom Query Field
+# we can use the @cypher directive on Query fields to compliment the auto-generated Query fields provided by the Neo4j GraphQL Library. Perhaps we want to leverage a full-text index for fuzzy matching for book searches?
 type Query {
   bookSearch(searchString: String!): [Book] @cypher(statement: """
   CALL db.index.fulltext.queryNodes('bookIndex', $searchString+'~')
@@ -106,8 +106,8 @@ type Query {
   """)
 }
 
-# Custom Mutation Field
-# Similar to adding Query fields, we can use @cypher schema directives to add new Mutation fields. This is useful in cases where we have specific logic we’d like to take into account when creating or updating data. Here we make use of the MERGE Cypher clause to avoid creating duplicate Subject nodes and connecting them to books.
+# custom Mutation Field
+# similar to adding Query fields, we can use @cypher schema directives to add new Mutation fields. This is useful in cases where we have specific logic we’d like to take into account when creating or updating data. Here we make use of the MERGE Cypher clause to avoid creating duplicate Subject nodes and connecting them to books.
 type Mutation {
   mergeBookSubjects(subject: String!, bookTitles: [String!]!): Subject @cypher(statement: """
   MERGE (s:Subject {name: $subject})
@@ -119,8 +119,8 @@ type Mutation {
   """)
 }
 
-# Custom Resolvers
-# Combining the power of Cypher and GraphQL is extremely powerful, however there are bound to be some cases where we want to add custom logic using code by implementing resolver functions. This might be where we want to fetch data from another database, API, or system. Let’s consider a contrived example where we compute an estimated delivery date using a custom resolver function.
+# custom Resolvers
+# combining the power of Cypher and GraphQL is extremely powerful, however there are bound to be some cases where we want to add custom logic using code by implementing resolver functions. This might be where we want to fetch data from another database, API, or system. Let’s consider a contrived example where we compute an estimated delivery date using a custom resolver function.
 # Now it’s time to implement our Order.estimatedDelivery resolver function. Our function simply calculates a random date - but the point is that this can be any custom logic we choose to define.
 extend type Order {
   estimatedDelivery: DateTime @ignore
@@ -137,3 +137,74 @@ extend type Book {
     RETURN b LIMIT 1
   """)
 }
+
+# auth
+
+# isAuthenticated
+# make use of the isAuthenticated authorization rule in our bookstore GraphQL API to
+# protect the Subject type. Let’s say we want to make returning a book’s subjects a
+# "premium" feature to encourage users to sign-up for our application
+extend type Subject @auth(rules: [
+  {isAuthenticated: true}
+])
+
+# Roles
+# which means that this user has the "admin" role. Let’s add a rule to our GraphQL 
+# type definitions that in order to create, update, or delete books, the user must
+# have the "admin" role.
+# note that we’ve included the operations array to specify this rule only applies
+# to CREATE, UPDATE, and DELETE operations - all users will still be able to read book
+# objects, but if any request tries to create or update a book the operation will fail
+# unless a valid "admin" role is included in the token.
+extend type Book @auth(rules: [
+  {operations: [CREATE, UPDATE, DELETE], roles: ["admin"]}
+])
+
+# Allow
+# A customer must not be able to view orders placed by other customers. Adding an Allow
+# rule will allow us to protect orders from other nosy customers.
+# Here we add a rule to the Order type that a customer’s "sub" (the subject) claim in
+# the JWT must match the username of the customer who placed the order.
+# extend type Order @auth(rules: [{allow: {customer: {username: "$jwt.sub"}}}])
+# Of course we will also allow admins to have access to orders, so let’s update the
+# rule to also grant access to any requests with the "admin" role:
+extend type Order @auth(
+  rules: [
+    {allow: {customer: {username: "$jwt.sub"}}}, 
+    {roles: ["admin"]}
+])
+
+# Where
+# In the previous example the client was required to filter for orders that the 
+# customer had placed. We don’t always want to expect the client to include this
+# filtering logic in the GraphQL query. In some cases we simply want to return whatever
+# data the currently authenticated user has access to. For these cases we can use a
+# Where authorization rule to apply a filter to the generated database queries - 
+# ensuring only the data the user has access to is returned.
+#
+# We want a user to only be able to view their own customer information.
+# Here we add a rule to the Customer type that will apply a filter any time the
+# customer type is accessed that filters for the currently authenticated customer
+# by adding a predicate that matches the username property to the sub claim in the JWT.
+extend type Customer @auth(
+  rules: [
+    {where: {username: "$jwt.sub"}}
+  ]
+)
+# Note that our query doesn’t specify which customer to return - we’re requesting all
+# customers - but we only get back the customer that we have access to.
+
+# Bind
+# The final type of authorization rule that we will explore is the Bind rule.
+# Bind allows us to specify connections that must exist in the graph when creating or
+# updating data based on claims in the JWT.
+#
+# We want to add a rule that when creating a review, the review node is connected to
+# the currently authenticated customer - we don’t want customers to be writing
+# reviews on behalf of other users! This rule means the username of the author of a
+# review must match the sub claim in the JWT when creating or updating reviews:
+extend type Review @auth(
+  rules: [
+    {operations: [CREATE,UPDATE], bind: {author: {username: "$jwt.sub"} }}
+  ]
+)

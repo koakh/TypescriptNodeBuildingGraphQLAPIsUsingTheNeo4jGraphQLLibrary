@@ -1,4 +1,12 @@
 
 Todo:
-  ☐ Https
+  ☐ if user doesn't exists in db authentication works?
+  ☐ add signon and singnin and jwt from neo-push
+  ☐ add seed ogm from seed.md
+  ☐ create a resolver only with code and try to use authentication/authorization, can be a dummy type object
+  ☐ https
   ☐ WebSockets or Pub/Sub
+  ☐ Explore code and directives
+  ☐ Try use typeDefs in other graphql implementation like nestjs, 
+  ☐ graphql live queries
+
