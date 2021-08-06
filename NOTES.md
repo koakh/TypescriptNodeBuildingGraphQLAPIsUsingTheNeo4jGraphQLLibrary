@@ -1,5 +1,22 @@
 # NOTES
 
+project from **graphacademy**
+
+## TLDR
+
+open neo4 desktop and start or create `Neo4jGraphQLLibrary` database
+if create a new database open `seed.md` and launch seed mutations
+
+```shell
+# launch project: 
+$ npm run debug
+```
+
+uses `DEBUG=@neo4j/graphql:*`
+
+1. go to <http://localhost:4000/>
+2. open `client.http` and fire some operations
+
 ## Links
 
 - [Intro To GraphQL &amp; Neo4j - Building GraphQL APIs Using The Neo4j GraphQL Library](https://neo4j.com/graphacademy/training-graphql-apis/01-graphql-apis-intro-to-graphql/)
@@ -48,7 +65,7 @@ NEO4J_USER=neo4j
 NEO4J_PASSWORD=men-dealer-goals
 ```
 
-## Enebale debug
+## Enable debug
 
 pass `DEBUG=@neo4j/graphql:*` in scripts
 

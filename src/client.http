@@ -26,8 +26,8 @@
 // @name booksWherePriceLess
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
+Content-Type: {{contentType}}
 // Authorization: {{Authorization}}
 
 query ($price: Float!) {
@@ -45,8 +45,8 @@ query ($price: Float!) {
 // @name createAuthors
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
+Content-Type: {{contentType}}
 // Authorization: {{Authorization}}
 
 mutation {
@@ -84,9 +84,9 @@ mutation {
 // There are a few different ways to approach this one, let's see how we can accomplish this using the `updateBooks` mutation:
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
-// Authorization: {{Authorization}}
+Content-Type: {{contentType}}
+Authorization: {{Authorization}}
 
 mutation {
   # inspired
@@ -148,9 +148,9 @@ mutation {
 // @name booksCreateBooks
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
-// Authorization: {{Authorization}}
+Content-Type: {{contentType}}
+Authorization: {{Authorization}}
 
 mutation {
   createBooks(
@@ -174,9 +174,9 @@ mutation {
 // @name booksCreateReviews
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
-// Authorization: {{Authorization}}
+Content-Type: {{contentType}}
+Authorization: {{Authorization}}
 
 mutation {
   createReviews(
@@ -202,9 +202,9 @@ mutation {
 // We can even create more complex nested structures using this nested mutation feature of the Neo4j GraphQL Library. Here we’ll create a Customer, Order, and Address nodes and their associated relationships in this single mutation.
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
-// Authorization: {{Authorization}}
+Content-Type: {{contentType}}
+Authorization: {{Authorization}}
 
 mutation {
   createCustomers(
@@ -258,9 +258,9 @@ mutation {
 // We can even create more complex nested structures using this nested mutation feature of the Neo4j GraphQL Library. Here we’ll create a Customer, Order, and Address nodes and their associated relationships in this single mutation.
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
-// Authorization: {{Authorization}}
+Content-Type: {{contentType}}
+Authorization: {{Authorization}}
 
 mutation {
   createBooks(
@@ -297,9 +297,9 @@ mutation {
 // We can even create more complex nested structures using this nested mutation feature of the Neo4j GraphQL Library. Here we’ll create a Customer, Order, and Address nodes and their associated relationships in this single mutation.
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
-// Authorization: {{Authorization}}
+Content-Type: {{contentType}}
+Authorization: {{Authorization}}
 
 mutation {
   createCustomers(
@@ -371,8 +371,8 @@ mutation {
 // @name sortingAndPagination
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
+Content-Type: {{contentType}}
 // Authorization: {{Authorization}}
 
 query {
@@ -386,8 +386,8 @@ query {
 // @name filtering
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
+Content-Type: {{contentType}}
 // Authorization: {{Authorization}}
 
 query {
@@ -401,8 +401,8 @@ query {
 // @name filteringDistanceToPoint
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
+Content-Type: {{contentType}}
 // Authorization: {{Authorization}}
 
 query {
@@ -423,8 +423,8 @@ query {
 // where argument in nested selections to filter relationships.
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
+Content-Type: {{contentType}}
 // Authorization: {{Authorization}}
 
 query {
@@ -443,9 +443,9 @@ query {
 // filtering at the root of our query, but using a relationship
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
-// Authorization: {{Authorization}}
+Content-Type: {{contentType}}
+Authorization: {{Authorization}}
 
 query {
   orders(
@@ -476,8 +476,8 @@ query {
 // @name seedPart31
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
+Content-Type: {{contentType}}
 Authorization: {{Authorization}}
 
 mutation {
@@ -525,8 +525,8 @@ mutation {
 // @name seedPart32
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
+Content-Type: {{contentType}}
 Authorization: {{Authorization}}
 
 mutation {
@@ -597,9 +597,9 @@ mutation {
 // @name orderSubTotal
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
-// Authorization: {{Authorization}}
+Content-Type: {{contentType}}
+Authorization: {{Authorization}}
 
 query {
   orders {
@@ -615,9 +615,9 @@ query {
 // @name booksRecommendedBooks
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
-// Authorization: {{Authorization}}
+Content-Type: {{contentType}}
+Authorization: {{Authorization}}
 
 query {
   customers {
@@ -635,9 +635,9 @@ query {
 // query an external API to fetch this data using the apoc.load.json
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
-// Authorization: {{Authorization}}
+Content-Type: {{contentType}}
+Authorization: {{Authorization}}
 
 query {
   orders {
@@ -658,8 +658,8 @@ query {
 // @name booksBookSearch
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
+Content-Type: {{contentType}}
 // Authorization: {{Authorization}}
 
 query {
@@ -673,8 +673,8 @@ query {
 // @name booksMergeBookSubjects
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
+Content-Type: {{contentType}}
 // Authorization: {{Authorization}}
 
 mutation {
@@ -690,9 +690,9 @@ mutation {
 // @name ordersEstimatedDeliveryCustomResolver
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
-// Authorization: {{Authorization}}
+Content-Type: {{contentType}}
+Authorization: {{Authorization}}
 
 query {
   orders {
@@ -709,8 +709,8 @@ query {
 // use the Jaccard Similarity function to find similar books using book subjects:
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
+Content-Type: {{contentType}}
 // Authorization: {{Authorization}}
 
 query {
@@ -726,8 +726,8 @@ query {
 // @name template
 
 POST {{host}}
-Content-Type: {{contentType}}
 X-REQUEST-TYPE: GraphQL
+Content-Type: {{contentType}}
 // Authorization: {{Authorization}}
 
 query ($price: Float!) {

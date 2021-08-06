@@ -1,11 +1,15 @@
 # SEED
 
 ```cypher
+# delete all nodes
 MATCH (a) DETACH DELETE a
+
 # create index
+
 # deprecated
 # CALL db.index.fulltext.createNodeIndex("bookIndex", ["Book"],["title", "description"])
 # https://neo4j.com/docs/cypher-manual/current/administration/indexes-for-full-text-search/
+
 CREATE FULLTEXT INDEX bookIndex FOR (n:Book) ON EACH [n.title, n.description]
 # test with
 ```

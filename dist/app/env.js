@@ -6,5 +6,7 @@ exports.envVariables = {
     neo4JUri: process.env.NEO4J_URI || 'bolt://localhost:7687',
     neo4JUser: process.env.NEO4J_USER || 'neo4j',
     neo4JPassword: process.env.NEO4J_PASSWORD || 'letmein',
+    jwtSecret: process.env.JWT_SECRET || 'yetanotherstupidpassword',
 };
+// console.log(`envVariables: [${JSON.stringify(envVariables, undefined, 2)}]`);
 //# sourceMappingURL=env.js.map
