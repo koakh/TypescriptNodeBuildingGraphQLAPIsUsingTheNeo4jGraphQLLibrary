@@ -61,10 +61,11 @@ const server = new ApolloServer({
   context: ({ req }) => ({ driver, req }),
   schema: neoSchema.schema,
   introspection: true,
-  playground: true
+  debug: true,
+  // now use apollo studio
+  // playground: true,
 });
 
-// server.listen(e.serverPort).then(() => console.log(`server listening on port ${e.serverPort}`));
 // start ApolloServer
 server.listen().then(({ url }) => {
   console.log(`GraphQL server ready at ${url}`);

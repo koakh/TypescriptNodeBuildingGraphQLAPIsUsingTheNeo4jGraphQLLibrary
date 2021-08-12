@@ -1,3 +1,6 @@
+# file copied from
+# koakh-laptop:/home/mario/Development/Neo4j/BuildingGraphQLAPIsUsingTheNeo4jGraphQLLibrary/src/schema.graphql
+
 # The @relationship directive is used to define relationships.
 # DateTime and Point scalar types are available and map to the equivalent native Neo4j database types.
 # The @timestamp directive is used to indicate the property will be automatically updated when the node is created and updated.
@@ -144,9 +147,11 @@ extend type Book {
 # make use of the isAuthenticated authorization rule in our bookstore GraphQL API to
 # protect the Subject type. Let’s say we want to make returning a book’s subjects a
 # "premium" feature to encourage users to sign-up for our application
-extend type Subject @auth(rules: [
-  {isAuthenticated: true}
-])
+extend type Subject @auth(
+  rules: [
+    {isAuthenticated: true}
+  ]
+)
 
 # Roles
 # which means that this user has the "admin" role. Let’s add a rule to our GraphQL 
@@ -156,9 +161,14 @@ extend type Subject @auth(rules: [
 # to CREATE, UPDATE, and DELETE operations - all users will still be able to read book
 # objects, but if any request tries to create or update a book the operation will fail
 # unless a valid "admin" role is included in the token.
-extend type Book @auth(rules: [
-  {operations: [CREATE, UPDATE, DELETE], roles: ["admin"]}
-])
+extend type Book @auth(
+  rules: [
+    {operations: 
+      [CREATE,UPDATE,DELETE], 
+      roles: ["admin"]
+    }
+  ]
+)
 
 # Allow
 # A customer must not be able to view orders placed by other customers. Adding an Allow
@@ -170,8 +180,15 @@ extend type Book @auth(rules: [
 # rule to also grant access to any requests with the "admin" role:
 extend type Order @auth(
   rules: [
-    {allow: {customer: {username: "$jwt.sub"}}}, 
-    {roles: ["admin"]}
+    {operations: 
+      [CREATE,UPDATE,DELETE],
+      roles: ["admin"]},
+    {allow: 
+      {customer: {username: "$jwt.sub"}}
+    },
+    {roles: 
+      ["admin"]
+    }
 ])
 
 # Where
@@ -188,9 +205,20 @@ extend type Order @auth(
 # by adding a predicate that matches the username property to the sub claim in the JWT.
 extend type Customer @auth(
   rules: [
-    {where: {username: "$jwt.sub"}}
+    {operations: 
+      [CREATE,UPDATE,DELETE],
+      roles: ["admin"]
+    },
+    {where: {
+      username: "$jwt.sub"}
+    },
+    {roles: 
+      # required customer to use query customers/ROLE_USER, ex in booksRecommendedBooks
+      ["admin", "customer"]
+    }
   ]
 )
+
 # Note that our query doesn’t specify which customer to return - we’re requesting all
 # customers - but we only get back the customer that we have access to.
 
@@ -205,6 +233,13 @@ extend type Customer @auth(
 # review must match the sub claim in the JWT when creating or updating reviews:
 extend type Review @auth(
   rules: [
-    {operations: [CREATE,UPDATE], bind: {author: {username: "$jwt.sub"} }}
+    {operations: 
+      [CREATE,UPDATE],
+      roles: ["admin"]
+      bind: {author: {username: "$jwt.sub"} }
+    },
+    {roles: 
+      ["admin"]
+    }
   ]
 )
